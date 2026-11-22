@@ -10,7 +10,7 @@ SERVICE_USER="${SERVICE_USER:-pi}"
 echo ">>> Pakete installieren"
 apt-get update
 apt-get install -y --no-install-recommends \
-    python3-venv python3-pip fonts-dejavu-core python3-spidev git
+    python3-venv python3-pip fonts-dejavu-core python3-spidev python3-rpi.gpio git
 
 echo ">>> SPI aktivieren (raspi-config)"
 if [ "$(raspi-config nonint get_spi)" != "0" ]; then
@@ -31,7 +31,10 @@ if [ ! -d "$TARGET/waveshare_epd" ]; then
 fi
 
 echo ">>> Virtualenv + Abhaengigkeiten"
-python3 -m venv "$TARGET/venv"
+# --system-site-packages: SPI-GPIO-Bindungen (spidev/RPi.GPIO) aus dem
+# apt-Paket sind im venv sichtbar; sonst: ModuleNotFoundError 'spidev'
+rm -rf "$TARGET/venv"
+python3 -m venv --system-site-packages "$TARGET/venv"
 "$TARGET/venv/bin/pip" install --upgrade pip
 "$TARGET/venv/bin/pip" install -r "$TARGET/requirements.txt"
 
