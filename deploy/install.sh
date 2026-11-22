@@ -39,9 +39,10 @@ echo ">>> Berechtigungen (${SERVICE_USER})"
 usermod -a -G spi,gpio "$SERVICE_USER" || true
 chown -R "$SERVICE_USER":"$SERVICE_USER" "$TARGET"
 
-echo ">>> systemd-Units installieren"
+echo ">>> systemd-Units installieren (User: ${SERVICE_USER})"
 cp "$SRC/deploy/roomdisplay.service" /etc/systemd/system/
 cp "$SRC/deploy/roomdisplay-web.service" /etc/systemd/system/
+sed -i "s/^User=.*/User=${SERVICE_USER}/" /etc/systemd/system/roomdisplay*.service
 systemctl daemon-reload
 systemctl enable roomdisplay.service roomdisplay-web.service
 
