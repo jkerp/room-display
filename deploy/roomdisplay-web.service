@@ -1,0 +1,17 @@
+[Unit]
+Description=Raumbelegung Display - Web-Upload fuer ICS
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Pfade ggf. an Installationsort anpassen
+WorkingDirectory=/opt/room-display
+Environment=ROOMDISPLAY_CONFIG=/opt/room-display/config.yaml
+ExecStart=/opt/room-display/venv/bin/python -m roomdisplay --web
+Restart=always
+RestartSec=10
+User=pi
+
+[Install]
+WantedBy=multi-user.target

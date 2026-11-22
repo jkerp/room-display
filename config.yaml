@@ -1,0 +1,41 @@
+# Konfiguration Raumbelegungs-Display (Waveshare 7.5" HAT B V3, 800x480)
+#
+# Pfade ggf. an den Installationsort anpassen (Standard: /opt/room-display).
+
+display:
+  # epd7in5_V3 = 7.5 HAT B (V3), 800x480, Schwarz/Weiss
+  model: epd7in5_V3
+  width: 800
+  height: 480
+  # Ausrichtung des Panels relativ zum Gehaeuse in 90-Grad-Schritten: 0, 90, 180, 270
+  rotation: 0
+  # Mindestabstand zwischen zwei E-Paper-Refreshes in Sekunden (Panel schonen)
+  min_refresh_interval: 20
+
+views:
+  # Abwechselnde Anzeige in dieser Reihenfolge; gewuenschte Zeilen entfernen.
+  sequence: [status, day, status, week]
+  # Wechselsekunden zwischen zwei Ansichten
+  interval: 180
+
+calendar:
+  # Verzeichnis, in das die ICS-Datei per Web-Upload gelandet wird
+  data_dir: data
+  # Dateiname der aktuellen Kalenderdatei
+  filename: raumbelegung.ics
+  # Warnung auf dem Display, wenn die Datei aelter als X Tage ist
+  stale_days: 35
+
+room:
+  # Anzeigename der Dose/Tuerschildes
+  name: "Raum 0.012"
+  location: "Auf dem H\u00fcgel 71"
+
+web:
+  host: 0.0.0.0
+  port: 8080
+  # Optional: Upload nur mit Passwort (benutzt HTTP Basic Auth). Leer = ohne Auth.
+  # Empfohlen, wenn das Display im allgemeinen LAN/Uni-Netz haengt.
+  username: admin
+  # Token/Passwort - bitte nach Installation via "systemctl edit" oder env setzen!
+  password: ""
