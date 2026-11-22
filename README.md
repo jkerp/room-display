@@ -108,10 +108,13 @@ roomdisplay/         Python-Paket
   render.py          Pillow-Layout der drei Ansichten
   display.py         epd7in5_V3-Bindung + Preview-Modus + Rotation
   config.py          YAML-Konfiguration + Env-Override (Passwort)
-fonts/               DejaVu Sans (SIL Open Font License)
+fonts/               DejaVu Sans (SIL-Download-Lizenz, freie Weitergabe)
 deploy/              systemd-Units + install.sh
 data/                Ablageort der ICS-Datei (raumbelegung.ics)
 ```
+
+Die DejaVu-Schriften liegen gebündelt bei; alternativ genügt das Paket
+`fonts-dejavu-core`.
 
 ## Hinweise zur Lebensdauer des Panels
 
