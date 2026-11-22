@@ -3,8 +3,10 @@
 # Pfade ggf. an den Installationsort anpassen (Standard: /opt/room-display).
 
 display:
-  # epd7in5_V3 = 7.5 HAT B (V3), 800x480, Schwarz/Weiss
-  model: epd7in5_V3
+  # epd7in5b_V2 = 7.5" HAT (B), Schwarz/Weiss/ROT - auch fuer Boards mit V3-Logo
+# (z. B. SKU 13505); Waveshare nutzt fuer V3 denselben V2-Treiber.
+# Schwarz/weiss-Variante des 7.5" HAT: epd7in5_V2
+  model: epd7in5b_V2
   width: 800
   height: 480
   # Ausrichtung des Panels relativ zum Gehaeuse in 90-Grad-Schritten: 0, 90, 180, 270

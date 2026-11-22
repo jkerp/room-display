@@ -18,8 +18,31 @@ from .schedule import Occurrence, Schedule, _local_tz
 
 log = logging.getLogger(__name__)
 
-WHITE = 255
-BLACK = 0
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+
+
+def split_channels(image: Image.Image) -> tuple[Image.Image, Image.Image]:
+    """RGB-Bild in Schwarz- und Rotkanal aufteilen (Modus '1', 0 = angetragen).
+
+    Der Waveshare-Dreifarben-Treiber erwartet zwei monochrome Puffer:
+    0x10 = Schwarz/Weiss, 0x13 = Rot. Antialiasing-Raender fallen durch
+    die Schwellen sauber weg.
+    """
+    rgb = image.convert("RGB")
+    black = Image.new("1", rgb.size, 1)
+    red = Image.new("1", rgb.size, 1)
+    pb, pr = black.load(), red.load()
+    px = rgb.load()
+    for yy in range(rgb.height):
+        for xx in range(rgb.width):
+            r, g, b = px[xx, yy]
+            if r < 128 and g < 128 and b < 128:
+                pb[xx, yy] = 0
+            elif r >= 128 and g < 128 and b < 128:
+                pr[xx, yy] = 0
+    return black, red
 
 _WEEKDAYS = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
 
@@ -98,7 +121,7 @@ def _footer(draw: ImageDraw.ImageDraw, cfg: Config, fonts: Fonts, schedule: Sche
 
 
 def render_status(cfg: Config, schedule: Schedule, fonts: Fonts) -> Image.Image:
-    image = Image.new("L", (cfg.display.width, cfg.display.height), WHITE)
+    image = Image.new("RGB", (cfg.display.width, cfg.display.height), WHITE)
     draw = ImageDraw.Draw(image)
     width, height = image.size
     now = datetime.now(_local_tz())
@@ -109,13 +132,13 @@ def render_status(cfg: Config, schedule: Schedule, fonts: Fonts) -> Image.Image:
 
     if current is not None:
         busy = f"bis {current.end.strftime('%H:%M')} Uhr"
-        title = _truncate(draw, current.summary, fonts.big, width - 48)
+        title = _truncate(draw, current.summary, fonts.bold, width - 48)
         time_str = (f"{current.start.strftime('%H:%M')} - {current.end.strftime('%H:%M')} Uhr"
                     + (f"   \u00b7   {current.category}" if current.category else ""))
         remaining = int((current.end - now).total_seconds() // 60)
         remaining_text = f"noch {remaining} min"
         rem_w = draw.textlength(remaining_text, font=fonts.header)
-        draw.text((28, y + 24), "BELEGT", font=fonts.huge, fill=BLACK)
+        draw.text((28, y + 24), "BELEGT", font=fonts.huge, fill=RED)
         draw.text((28, y + 208), busy, font=fonts.big, fill=BLACK)
         draw.text((width - 28 - rem_w, y + 216), remaining_text, font=fonts.header, fill=BLACK)
         draw.text((28, y + 300), title, font=fonts.regular, fill=BLACK)
@@ -143,7 +166,7 @@ def render_status(cfg: Config, schedule: Schedule, fonts: Fonts) -> Image.Image:
 
 
 def render_day(cfg: Config, schedule: Schedule, fonts: Fonts) -> Image.Image:
-    image = Image.new("L", (cfg.display.width, cfg.display.height), WHITE)
+    image = Image.new("RGB", (cfg.display.width, cfg.display.height), WHITE)
     draw = ImageDraw.Draw(image)
     width, height = image.size
     today = date.today()
@@ -161,7 +184,7 @@ def render_day(cfg: Config, schedule: Schedule, fonts: Fonts) -> Image.Image:
             break
         ongoing = occ.is_ongoing
         if ongoing:
-            draw.rectangle([12, y - 6, width - 12, y + row_h - 14], fill=BLACK)
+            draw.rectangle([12, y - 6, width - 12, y + row_h - 14], fill=RED)
         fg = WHITE if ongoing else BLACK
         draw.text((24, y), occ.start.strftime("%H:%M"), font=fonts.bold, fill=fg)
         draw.text((24, y + 34), occ.end.strftime("%H:%M"), font=fonts.tiny, fill=fg)
@@ -180,7 +203,7 @@ def render_day(cfg: Config, schedule: Schedule, fonts: Fonts) -> Image.Image:
 
 
 def render_week(cfg: Config, schedule: Schedule, fonts: Fonts) -> Image.Image:
-    image = Image.new("L", (cfg.display.width, cfg.display.height), WHITE)
+    image = Image.new("RGB", (cfg.display.width, cfg.display.height), WHITE)
     draw = ImageDraw.Draw(image)
     width, height = image.size
     today = date.today()

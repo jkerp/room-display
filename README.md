@@ -1,8 +1,8 @@
 # Raumbelegungs-Display (Waveshare 7.5" e-Paper + Raspberry Pi Zero 2 W)
 
 Zeigt die Raumbelegung aus einer HISinOne-ICS-Datei auf einem Waveshare
-7.5-inch e-Paper HAT B (V3, 800x480, Schwarz/Weiss) an. Die ICS-Datei wird
-ueber einen Web-Upload im WLAN aktualisiert.
+7.5-inch e-Paper HAT (B) (V3, 800x480, Schwarz/Weiss/Rot) an. Die ICS-Datei
+wird ueber einen Web-Upload im WLAN aktualisiert.
 
 ## Ansichten (wechselnd)
 
@@ -90,7 +90,7 @@ python -m roomdisplay --preview --view day  # feste Ansicht
 
 | Abschnitt | Key                    | Bedeutung                                    |
 |-----------|------------------------|----------------------------------------------|
-| `display.model` | `epd7in5_V3`     | Treibermodul (V2-HAT: `epd7in5_V2`)          |
+| `display.model` | `epd7in5b_V2` | 7.5" HAT (B) Schwarz/Weiss/Rot - auch fuer Boards mit V3-Logo (SKU 13505); S/W-Variante: `epd7in5_V2` |
 | `display.rotation` | 0/90/180/270  | Fuer Hochkant-Montage z. B. `90`             |
 | `views.sequence` | Liste           | Wechsel: nicht benoetigte Eintraege entfernen |
 | `views.interval` | Sekunden        | Ansichtwechsel-Rhythmus (min. 30)            |
